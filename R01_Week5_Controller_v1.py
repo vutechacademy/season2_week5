@@ -12,7 +12,7 @@
 from machine import Pin, PWM, ADC, time_pulse_us
 import network, socket, time, gc
 
-AP_SSID = "R-01-AP"
+AP_SSID = "R-01-VU"
 AP_PASSWORD = "12345678"
 DEFAULT_SPEED = 65
 MOVE_TIMEOUT_MS = 800
@@ -61,11 +61,19 @@ def servo_angle(angle):
 
 # -------------------- LED / BUZZER --------------------
 led1, led2 = Pin(2, Pin.OUT), Pin(4, Pin.OUT)
-buzzer = Pin(23, Pin.OUT)
+# BUZZER - GPIO23
+buzzer_pwm = PWM(Pin(23), freq=2000)
+buzzer_pwm.duty_u16(0)
+
 def set_led(on):
     led1.value(1 if on else 0); led2.value(1 if on else 0)
+
 def set_buzzer(on):
-    buzzer.value(1 if on else 0)
+    buzzer_pwm.freq(2000)
+    buzzer_pwm.duty_u16(50000 if on else 0)
+
+
+
 
 # -------------------- SENSORS --------------------
 trig, echo = Pin(18, Pin.OUT), Pin(19, Pin.IN)
